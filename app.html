@@ -1,0 +1,837 @@
+<title>CollegePath</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap">
+<style>
+/* ── TOKENS ─────────────────────────────────────────────── */
+:root {
+  --bg:         #f5f5ee;
+  --surface:    #fffffe;
+  --surface2:   #f0f0e8;
+  --border:     #deded4;
+  --matcha:     #4e7040;
+  --matcha-mid: #6b9460;
+  --matcha-lt:  #ccdfc4;
+  --sage:       #e8f0e4;
+  --amber:      #b87d2e;
+  --amber-lt:   #fdf3e3;
+  --red-lt:     #fff0ee;
+  --red:        #c0432a;
+  --blue-lt:    #edf3ff;
+  --blue:       #2e5cb8;
+  --text:       #232320;
+  --text2:      #5a5a52;
+  --text3:      #9a9a8e;
+  --reach:      #c0432a;
+  --reach-bg:   #fff0ee;
+  --target:     #b87d2e;
+  --target-bg:  #fdf3e3;
+  --likely:     #4e7040;
+  --likely-bg:  #eaf4e6;
+  --safety:     #2e5cb8;
+  --safety-bg:  #edf3ff;
+  --shadow-sm: 0 1px 3px rgba(35,35,32,0.08);
+  --shadow:    0 4px 16px rgba(35,35,32,0.10);
+  --shadow-lg: 0 12px 40px rgba(35,35,32,0.13);
+  --radius:    12px;
+  --radius-sm: 8px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:         #1a1c18;
+    --surface:    #23261f;
+    --surface2:   #2c2f27;
+    --border:     #3a3d34;
+    --matcha:     #7db86c;
+    --matcha-mid: #94cc82;
+    --matcha-lt:  #2a3d24;
+    --sage:       #1e2d1a;
+    --amber:      #d4943e;
+    --amber-lt:   #2d2210;
+    --red-lt:     #2d1410;
+    --red:        #e05a42;
+    --blue-lt:    #101e3a;
+    --blue:       #6a9de8;
+    --text:       #ededea;
+    --text2:      #aaaaa0;
+    --text3:      #66665e;
+    --reach-bg:   #2d1410;
+    --target-bg:  #2d2210;
+    --likely-bg:  #162510;
+    --safety-bg:  #101e3a;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:         #1a1c18;
+  --surface:    #23261f;
+  --surface2:   #2c2f27;
+  --border:     #3a3d34;
+  --matcha:     #7db86c;
+  --matcha-mid: #94cc82;
+  --matcha-lt:  #2a3d24;
+  --sage:       #1e2d1a;
+  --amber:      #d4943e;
+  --amber-lt:   #2d2210;
+  --red-lt:     #2d1410;
+  --red:        #e05a42;
+  --blue-lt:    #101e3a;
+  --blue:       #6a9de8;
+  --text:       #ededea;
+  --text2:      #aaaaa0;
+  --text3:      #66665e;
+  --reach-bg:   #2d1410;
+  --target-bg:  #2d2210;
+  --likely-bg:  #162510;
+  --safety-bg:  #101e3a;
+}
+
+/* ── RESET ──────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'DM Sans',system-ui,sans-serif;
+  font-size:16px;line-height:1.6;
+  background:var(--bg);color:var(--text);
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{font-family:'DM Serif Display',Georgia,serif;line-height:1.2;text-wrap:balance}
+a{color:var(--matcha);text-decoration:none}
+a:hover{text-decoration:underline}
+button{cursor:pointer;font-family:inherit}
+input,select,textarea{font-family:inherit}
+img{max-width:100%}
+
+/* ── LAYOUT ─────────────────────────────────────────────── */
+.page{display:none;min-height:100vh}
+.page.active{display:block}
+
+/* ── NAV ─────────────────────────────────────────────────── */
+#main-nav{
+  position:sticky;top:0;z-index:100;
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  padding:0 24px;
+  display:flex;align-items:center;gap:8px;
+  height:56px;
+}
+.nav-logo{
+  font-family:'DM Serif Display',serif;
+  font-size:20px;color:var(--matcha);
+  margin-right:16px;display:flex;align-items:center;gap:6px;
+}
+.nav-logo svg{width:22px;height:22px}
+.nav-btn{
+  padding:6px 14px;border-radius:20px;
+  font-size:13px;font-weight:500;
+  background:transparent;border:none;
+  color:var(--text2);transition:background .15s,color .15s;
+}
+.nav-btn:hover,.nav-btn.active{background:var(--sage);color:var(--matcha)}
+.nav-spacer{flex:1}
+.nav-start-btn{
+  background:var(--matcha);color:#fff;
+  padding:8px 18px;border-radius:20px;
+  font-size:13px;font-weight:500;border:none;
+  transition:background .15s;
+}
+.nav-start-btn:hover{background:var(--matcha-mid)}
+
+/* ── HOME PAGE ──────────────────────────────────────────── */
+#page-home{background:var(--bg)}
+.home-hero{
+  max-width:760px;margin:0 auto;
+  padding:72px 24px 48px;text-align:center;
+}
+.home-eyebrow{
+  display:inline-block;
+  background:var(--sage);color:var(--matcha);
+  font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  padding:5px 14px;border-radius:20px;margin-bottom:24px;
+}
+.home-hero h1{
+  font-size:clamp(36px,6vw,60px);color:var(--text);
+  margin-bottom:20px;
+}
+.home-hero h1 em{color:var(--matcha);font-style:normal}
+.home-hero p{
+  font-size:18px;color:var(--text2);
+  max-width:560px;margin:0 auto 36px;line-height:1.7;
+}
+.hero-cta{
+  background:var(--matcha);color:#fff;
+  border:none;padding:16px 36px;border-radius:32px;
+  font-size:17px;font-weight:600;
+  box-shadow:0 4px 20px rgba(78,112,64,.35);
+  transition:transform .15s,box-shadow .15s;
+}
+.hero-cta:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(78,112,64,.4)}
+
+.home-trust{
+  display:flex;justify-content:center;gap:24px;
+  flex-wrap:wrap;margin-top:48px;padding:0 24px;
+}
+.trust-pill{
+  display:flex;align-items:center;gap:8px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:24px;padding:8px 16px;
+  font-size:13px;color:var(--text2);
+}
+.trust-pill svg{width:16px;height:16px;color:var(--matcha);flex-shrink:0}
+
+.home-features{
+  max-width:1000px;margin:60px auto;padding:0 24px;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;
+}
+.feat-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:24px;
+}
+.feat-icon{
+  width:40px;height:40px;border-radius:10px;
+  background:var(--sage);display:flex;align-items:center;justify-content:center;
+  margin-bottom:14px;
+}
+.feat-icon svg{width:20px;height:20px;color:var(--matcha)}
+.feat-card h3{font-size:16px;margin-bottom:6px}
+.feat-card p{font-size:14px;color:var(--text2);line-height:1.55}
+
+.home-disclaimer{
+  max-width:700px;margin:0 auto 60px;padding:16px 24px;
+  background:var(--amber-lt);border:1px solid var(--border);border-radius:var(--radius-sm);
+  font-size:13px;color:var(--text2);text-align:center;
+}
+
+/* ── WIZARD ─────────────────────────────────────────────── */
+#page-wizard{background:var(--bg)}
+.wizard-wrap{display:flex;min-height:calc(100vh - 56px)}
+.wizard-sidebar{
+  width:260px;flex-shrink:0;
+  background:var(--surface);border-right:1px solid var(--border);
+  padding:32px 24px;display:flex;flex-direction:column;gap:4px;
+}
+.wiz-step-item{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 12px;border-radius:var(--radius-sm);
+  font-size:14px;color:var(--text3);transition:background .15s;
+}
+.wiz-step-item.done{color:var(--matcha)}
+.wiz-step-item.active{background:var(--sage);color:var(--matcha);font-weight:600}
+.wiz-step-num{
+  width:26px;height:26px;border-radius:50%;
+  border:1.5px solid currentColor;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:600;flex-shrink:0;
+}
+.wiz-step-item.done .wiz-step-num{
+  background:var(--matcha);border-color:var(--matcha);color:#fff;
+}
+.wiz-step-item.done .wiz-step-num::after{content:'✓';font-size:11px}
+.wiz-step-item:not(.done) .wiz-step-num{font-size:12px}
+
+.wizard-body{
+  flex:1;padding:40px;max-width:680px;
+}
+.wiz-header{margin-bottom:32px}
+.wiz-header h2{font-size:28px;margin-bottom:8px}
+.wiz-header p{color:var(--text2);font-size:15px}
+
+.field-group{margin-bottom:24px}
+.field-label{font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;display:block;letter-spacing:.01em}
+.field-hint{font-size:12px;color:var(--text3);margin-top:4px}
+
+.chip-grid{display:flex;flex-wrap:wrap;gap:8px}
+.chip{
+  padding:8px 16px;border-radius:20px;font-size:14px;
+  border:1.5px solid var(--border);background:var(--surface);
+  color:var(--text2);cursor:pointer;transition:all .15s;user-select:none;
+}
+.chip:hover{border-color:var(--matcha);color:var(--matcha)}
+.chip.selected{background:var(--sage);border-color:var(--matcha);color:var(--matcha);font-weight:500}
+
+.radio-grid{display:flex;flex-direction:column;gap:8px}
+.radio-opt{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 16px;border-radius:var(--radius-sm);
+  border:1.5px solid var(--border);background:var(--surface);
+  cursor:pointer;transition:all .15s;
+}
+.radio-opt:hover{border-color:var(--matcha)}
+.radio-opt.selected{border-color:var(--matcha);background:var(--sage)}
+.radio-dot{
+  width:18px;height:18px;border-radius:50%;
+  border:2px solid var(--border);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  transition:border-color .15s;
+}
+.radio-opt.selected .radio-dot{border-color:var(--matcha)}
+.radio-opt.selected .radio-dot::after{
+  content:'';width:8px;height:8px;border-radius:50%;background:var(--matcha);
+}
+
+select.field-select{
+  width:100%;padding:10px 14px;border-radius:var(--radius-sm);
+  border:1.5px solid var(--border);background:var(--surface);
+  color:var(--text);font-size:15px;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239a9a8e' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 12px center;
+  padding-right:36px;
+}
+select.field-select:focus{outline:none;border-color:var(--matcha)}
+
+input.field-input{
+  width:100%;padding:10px 14px;border-radius:var(--radius-sm);
+  border:1.5px solid var(--border);background:var(--surface);
+  color:var(--text);font-size:15px;
+}
+input.field-input:focus{outline:none;border-color:var(--matcha)}
+input.field-input::placeholder{color:var(--text3)}
+
+.wiz-actions{display:flex;align-items:center;gap:12px;margin-top:32px}
+.btn-primary{
+  background:var(--matcha);color:#fff;border:none;
+  padding:12px 28px;border-radius:24px;font-size:15px;font-weight:600;
+  transition:background .15s;
+}
+.btn-primary:hover{background:var(--matcha-mid)}
+.btn-secondary{
+  background:transparent;color:var(--text2);
+  border:1.5px solid var(--border);
+  padding:12px 24px;border-radius:24px;font-size:15px;
+  transition:border-color .15s;
+}
+.btn-secondary:hover{border-color:var(--matcha);color:var(--matcha)}
+
+/* ── RESULTS PAGE ───────────────────────────────────────── */
+#page-results{background:var(--bg)}
+.results-header{
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:24px 32px;
+  display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+}
+.results-header h2{font-size:22px;flex:1}
+.results-subhead{font-size:14px;color:var(--text2);margin-top:2px}
+.results-filters{display:flex;gap:8px;flex-wrap:wrap}
+.filter-chip{
+  padding:6px 14px;border-radius:16px;font-size:13px;
+  border:1.5px solid var(--border);background:var(--surface2);
+  color:var(--text2);cursor:pointer;transition:all .15s;
+}
+.filter-chip.active{border-color:var(--matcha);background:var(--sage);color:var(--matcha);font-weight:500}
+
+.results-body{max-width:1200px;margin:0 auto;padding:32px}
+.results-section{margin-bottom:40px}
+.section-label{
+  display:flex;align-items:center;gap:10px;margin-bottom:16px;
+}
+.section-badge{
+  padding:4px 12px;border-radius:12px;
+  font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+}
+.section-badge.reach{background:var(--reach-bg);color:var(--reach)}
+.section-badge.target{background:var(--target-bg);color:var(--target)}
+.section-badge.likely{background:var(--likely-bg);color:var(--likely)}
+.section-badge.safety{background:var(--safety-bg);color:var(--blue)}
+.section-count{font-size:14px;color:var(--text3)}
+
+.college-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+  gap:16px;
+}
+
+.college-card{
+  background:var(--surface);border:1.5px solid var(--border);
+  border-radius:var(--radius);overflow:hidden;
+  transition:box-shadow .2s,transform .2s;position:relative;
+}
+.college-card:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
+.college-card.selected{border-color:var(--matcha);box-shadow:0 0 0 3px var(--matcha-lt)}
+
+.card-top{padding:18px 18px 14px;border-bottom:1px solid var(--border)}
+.card-meta{display:flex;align-items:center;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+.card-tag{
+  font-size:11px;font-weight:600;letter-spacing:.04em;
+  padding:3px 8px;border-radius:10px;
+  background:var(--surface2);color:var(--text2);
+}
+.card-tag.pub{background:var(--blue-lt);color:var(--blue)}
+.card-tag.priv{background:var(--amber-lt);color:var(--amber)}
+.fit-badge{margin-left:auto;font-size:11px;font-weight:700;letter-spacing:.04em;
+  padding:3px 10px;border-radius:10px}
+.fit-badge.reach{background:var(--reach-bg);color:var(--reach)}
+.fit-badge.target{background:var(--target-bg);color:var(--target)}
+.fit-badge.likely{background:var(--likely-bg);color:var(--likely)}
+.fit-badge.safety{background:var(--safety-bg);color:var(--blue)}
+.card-name{font-family:'DM Serif Display',serif;font-size:18px;margin-bottom:2px}
+.card-location{font-size:13px;color:var(--text3)}
+
+.card-body{padding:14px 18px}
+.card-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.stat{font-size:13px}
+.stat-label{color:var(--text3);font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin-bottom:2px}
+.stat-val{color:var(--text);font-weight:500;font-variant-numeric:tabular-nums}
+
+.card-why{
+  background:var(--sage);border-radius:var(--radius-sm);
+  padding:10px 12px;font-size:13px;color:var(--text2);
+  line-height:1.5;margin-bottom:12px;
+}
+
+.card-majors{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px}
+.major-chip{
+  font-size:11px;padding:3px 8px;border-radius:8px;
+  background:var(--surface2);color:var(--text2);
+}
+
+.card-actions{display:flex;gap:8px;padding:12px 18px;border-top:1px solid var(--border)}
+.card-btn{
+  flex:1;padding:9px 12px;border-radius:20px;font-size:13px;font-weight:500;
+  border:1.5px solid var(--border);background:transparent;
+  color:var(--text2);transition:all .15s;
+}
+.card-btn:hover{border-color:var(--matcha);color:var(--matcha)}
+.card-btn.compare-btn.added{background:var(--matcha);color:#fff;border-color:var(--matcha)}
+
+.confidence-bar{
+  display:flex;align-items:center;gap:6px;margin-top:10px;
+}
+.conf-label{font-size:11px;color:var(--text3);flex-shrink:0}
+.conf-dots{display:flex;gap:3px}
+.conf-dot{width:8px;height:8px;border-radius:50%;background:var(--border)}
+.conf-dot.filled{background:var(--matcha)}
+
+/* ── COMPARE BAR ────────────────────────────────────────── */
+#compare-bar{
+  position:fixed;bottom:0;left:0;right:0;
+  background:var(--surface);border-top:1.5px solid var(--matcha);
+  padding:12px 24px;display:none;
+  align-items:center;gap:12px;
+  box-shadow:0 -4px 20px rgba(78,112,64,.15);
+  z-index:200;
+}
+#compare-bar.visible{display:flex}
+.compare-preview{display:flex;gap:8px;flex:1;flex-wrap:wrap}
+.compare-pill{
+  display:flex;align-items:center;gap:6px;
+  background:var(--sage);border:1px solid var(--matcha-lt);
+  border-radius:16px;padding:5px 12px;font-size:13px;
+}
+.compare-pill button{background:none;border:none;color:var(--text3);font-size:15px;line-height:1;cursor:pointer}
+.compare-pill button:hover{color:var(--red)}
+#compare-go{
+  background:var(--matcha);color:#fff;border:none;
+  padding:10px 24px;border-radius:20px;font-size:14px;font-weight:600;
+  white-space:nowrap;transition:background .15s;
+}
+#compare-go:hover{background:var(--matcha-mid)}
+
+/* ── COMPARE PAGE ───────────────────────────────────────── */
+#page-compare{background:var(--bg)}
+.compare-header{
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:20px 32px;display:flex;align-items:center;gap:16px;
+}
+.compare-header h2{font-size:20px;flex:1}
+.compare-scroll{overflow-x:auto;padding:24px}
+.compare-table{border-collapse:separate;border-spacing:0;width:100%;min-width:700px}
+.compare-table th{
+  background:var(--surface);border:1px solid var(--border);
+  padding:16px 20px;text-align:left;position:sticky;top:56px;
+  font-family:'DM Serif Display',serif;font-size:16px;
+}
+.compare-table th:first-child{width:180px;background:var(--surface2)}
+.compare-table td{
+  border:1px solid var(--border);padding:14px 20px;
+  background:var(--surface);font-size:14px;vertical-align:top;
+}
+.compare-table tr:nth-child(even) td{background:var(--surface2)}
+.compare-table .row-label{
+  font-weight:600;font-size:12px;letter-spacing:.04em;text-transform:uppercase;
+  color:var(--text2);background:var(--surface2);
+}
+.better{color:var(--matcha);font-weight:600}
+.worse{color:var(--red)}
+
+/* ── MODAL ──────────────────────────────────────────────── */
+#modal-overlay{
+  position:fixed;inset:0;background:rgba(35,35,32,.5);
+  z-index:300;display:none;align-items:flex-start;justify-content:center;
+  padding:24px;overflow-y:auto;
+}
+#modal-overlay.open{display:flex}
+.modal{
+  background:var(--surface);border-radius:var(--radius);
+  width:100%;max-width:720px;overflow:hidden;
+  box-shadow:var(--shadow-lg);margin:auto;
+}
+.modal-header{
+  padding:24px 28px 20px;border-bottom:1px solid var(--border);
+  display:flex;align-items:flex-start;gap:12px;
+}
+.modal-header-info{flex:1}
+.modal-header h2{font-size:24px;margin-bottom:4px}
+.modal-close{
+  background:var(--surface2);border:none;
+  width:32px;height:32px;border-radius:50%;
+  font-size:18px;color:var(--text2);flex-shrink:0;
+  transition:background .15s;
+}
+.modal-close:hover{background:var(--border)}
+.modal-tabs{display:flex;border-bottom:1px solid var(--border)}
+.mtab{
+  padding:12px 20px;font-size:14px;font-weight:500;
+  border:none;background:transparent;color:var(--text3);
+  border-bottom:2px solid transparent;cursor:pointer;transition:all .15s;
+}
+.mtab.active{color:var(--matcha);border-bottom-color:var(--matcha)}
+.mtab:hover{color:var(--text)}
+.modal-body{padding:24px 28px;max-height:60vh;overflow-y:auto}
+.modal-section{margin-bottom:24px}
+.modal-section h4{font-size:14px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+  color:var(--text3);margin-bottom:10px}
+.info-row{display:flex;justify-content:space-between;align-items:baseline;
+  padding:8px 0;border-bottom:1px solid var(--border);font-size:14px}
+.info-row:last-child{border:none}
+.info-row .lbl{color:var(--text2)}
+.info-row .val{font-weight:500}
+.visa-note{
+  background:var(--amber-lt);border:1px solid var(--border);
+  border-radius:var(--radius-sm);padding:14px 16px;font-size:14px;
+  color:var(--text2);margin-top:8px;line-height:1.55;
+}
+.visa-note strong{color:var(--amber)}
+.source-link{
+  display:flex;align-items:center;gap:6px;
+  font-size:13px;padding:6px 0;color:var(--text2);
+}
+.source-link a{color:var(--matcha)}
+.source-link .src-tag{
+  font-size:10px;font-weight:700;letter-spacing:.05em;
+  padding:2px 6px;border-radius:6px;
+  background:var(--matcha-lt);color:var(--matcha);
+}
+
+/* ── TIMELINE PAGE ──────────────────────────────────────── */
+#page-timeline{background:var(--bg)}
+.timeline-wrap{max-width:800px;margin:0 auto;padding:40px 24px}
+.timeline-wrap h2{font-size:32px;margin-bottom:8px}
+.timeline-sub{color:var(--text2);margin-bottom:40px;font-size:16px}
+.tl-month{display:flex;gap:24px;margin-bottom:32px}
+.tl-date{
+  flex-shrink:0;width:80px;text-align:right;
+  font-family:'DM Serif Display',serif;
+  font-size:15px;color:var(--matcha);padding-top:4px;font-weight:700;
+}
+.tl-line{
+  display:flex;flex-direction:column;align-items:center;gap:0;
+  flex-shrink:0;
+}
+.tl-dot{
+  width:12px;height:12px;border-radius:50%;
+  background:var(--matcha);flex-shrink:0;margin-top:5px;
+}
+.tl-rail{width:2px;flex:1;background:var(--matcha-lt);margin-top:4px}
+.tl-content{flex:1;padding-bottom:8px}
+.tl-content h3{font-size:16px;margin-bottom:8px}
+.tl-tasks{display:flex;flex-direction:column;gap:6px}
+.tl-task{
+  display:flex;align-items:flex-start;gap:8px;
+  font-size:14px;color:var(--text2);line-height:1.5;
+}
+.tl-task::before{content:'→';color:var(--matcha);flex-shrink:0;margin-top:2px}
+
+/* ── VISA PAGE ──────────────────────────────────────────── */
+#page-visa{background:var(--bg)}
+.visa-wrap{max-width:800px;margin:0 auto;padding:40px 24px}
+.visa-wrap h2{font-size:32px;margin-bottom:8px}
+.visa-section{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:24px;margin-bottom:20px;
+}
+.visa-section h3{font-size:18px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.visa-section p,.visa-section li{font-size:15px;color:var(--text2);line-height:1.65;margin-bottom:8px}
+.visa-section ul{padding-left:20px}
+.warning-box{
+  background:var(--amber-lt);border-left:3px solid var(--amber);
+  padding:14px 16px;border-radius:0 var(--radius-sm) var(--radius-sm) 0;
+  font-size:14px;color:var(--text2);margin-top:12px;
+}
+.good-box{
+  background:var(--likely-bg);border-left:3px solid var(--matcha);
+  padding:14px 16px;border-radius:0 var(--radius-sm) var(--radius-sm) 0;
+  font-size:14px;color:var(--text2);margin-top:12px;
+}
+
+/* ── SAT/ACT PAGE ───────────────────────────────────────── */
+#page-satact{background:var(--bg)}
+.satact-wrap{max-width:900px;margin:0 auto;padding:40px 24px}
+.satact-wrap h2{font-size:32px;margin-bottom:8px}
+.policy-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-top:24px}
+.policy-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:20px;
+}
+.policy-card h4{font-size:16px;margin-bottom:6px}
+.policy-card .loc{font-size:13px;color:var(--text3);margin-bottom:12px}
+.policy-badge{
+  display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;
+  padding:4px 10px;border-radius:12px;margin-bottom:10px;
+}
+.policy-badge.req{background:var(--red-lt);color:var(--red)}
+.policy-badge.opt{background:var(--amber-lt);color:var(--amber)}
+.policy-badge.blind{background:var(--likely-bg);color:var(--matcha)}
+.policy-scores{font-size:13px;color:var(--text2);margin-bottom:8px;line-height:1.6}
+.policy-advice{
+  background:var(--sage);border-radius:8px;
+  padding:10px 12px;font-size:13px;color:var(--text2);line-height:1.5;
+}
+
+/* ── SOURCES PAGE ───────────────────────────────────────── */
+#page-sources{background:var(--bg)}
+.sources-wrap{max-width:800px;margin:0 auto;padding:40px 24px}
+.sources-wrap h2{font-size:32px;margin-bottom:24px}
+.source-group{margin-bottom:28px}
+.source-group h3{font-size:16px;margin-bottom:12px;color:var(--text2)}
+.source-item{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:12px 0;border-bottom:1px solid var(--border);font-size:14px;
+}
+.source-item:last-child{border:none}
+.src-type{
+  flex-shrink:0;font-size:10px;font-weight:700;letter-spacing:.05em;
+  padding:3px 8px;border-radius:8px;margin-top:2px;
+  background:var(--sage);color:var(--matcha);
+}
+
+/* ── LOADING ─────────────────────────────────────────────── */
+.loading-screen{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:60vh;gap:20px;
+}
+.spinner{
+  width:40px;height:40px;border-radius:50%;
+  border:3px solid var(--matcha-lt);border-top-color:var(--matcha);
+  animation:spin .8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-screen p{color:var(--text2);font-size:15px}
+
+/* ── EMPTY STATE ─────────────────────────────────────────── */
+.empty-state{
+  text-align:center;padding:60px 24px;
+  color:var(--text3);
+}
+.empty-state h3{font-size:20px;color:var(--text2);margin-bottom:8px}
+
+/* ── RESPONSIVE ─────────────────────────────────────────── */
+@media(max-width:700px){
+  .wizard-sidebar{display:none}
+  .wizard-body{padding:24px 20px}
+  .college-grid{grid-template-columns:1fr}
+  .home-features{grid-template-columns:1fr 1fr}
+  .compare-bar-inner{flex-direction:column}
+}
+@media(max-width:480px){
+  .home-hero h1{font-size:32px}
+  .home-features{grid-template-columns:1fr}
+}
+
+/* ── MISC ────────────────────────────────────────────────── */
+.mt-8{margin-top:8px}.mt-16{margin-top:16px}.mt-24{margin-top:24px}
+.back-link{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:14px;color:var(--text2);padding:8px 0;cursor:pointer;
+  border:none;background:none;margin-bottom:8px;
+}
+.back-link:hover{color:var(--matcha)}
+.tag-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.disclaimer{
+  font-size:12px;color:var(--text3);
+  border-top:1px solid var(--border);padding-top:8px;margin-top:12px;
+  line-height:1.5;
+}
+</style>
+
+<!-- ═══════════════ HTML STRUCTURE ═══════════════ -->
+<div id="app">
+
+<!-- NAV (hidden on home/wizard) -->
+<nav id="main-nav" style="display:none">
+  <div class="nav-logo">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+    CollegePath
+  </div>
+  <button class="nav-btn active" onclick="showPage('results')" id="nav-results">My List</button>
+  <button class="nav-btn" onclick="showPage('compare')" id="nav-compare">Compare</button>
+  <button class="nav-btn" onclick="showPage('timeline')" id="nav-timeline">Timeline</button>
+  <button class="nav-btn" onclick="showPage('visa')" id="nav-visa">Visa & Aid</button>
+  <button class="nav-btn" onclick="showPage('satact')" id="nav-satact">SAT / ACT</button>
+  <button class="nav-btn" onclick="showPage('sources')" id="nav-sources">Sources</button>
+  <div class="nav-spacer"></div>
+  <button class="nav-start-btn" onclick="showPage('wizard');resetWizard()">Edit Profile</button>
+</nav>
+
+<!-- ── PAGE: HOME ── -->
+<div id="page-home" class="page active">
+  <div class="home-hero">
+    <div class="home-eyebrow">Free · No account needed</div>
+    <h1>Find the right college<br>for your <em>family's</em> future</h1>
+    <p>A step-by-step guide built for parents who didn't attend college in the U.S. — including families on H-1B and H-4 visas. We explain everything in plain English.</p>
+    <button class="hero-cta" onclick="startWizard()">Start Building Your College List →</button>
+  </div>
+  <div class="home-trust">
+    <div class="trust-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>Official sources only</div>
+    <div class="trust-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>H-4 visa guidance included</div>
+    <div class="trust-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Real cost estimates</div>
+    <div class="trust-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>Junior year timeline</div>
+  </div>
+  <div class="home-features">
+    <div class="feat-card">
+      <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg></div>
+      <h3>Smart College Finder</h3>
+      <p>Answer 6 short questions. Get a personalized list of Reach, Target, and Safety schools — with real data for each.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg></div>
+      <h3>Side-by-Side Compare</h3>
+      <p>Pick up to 4 colleges and compare cost, selectivity, major strength, and career outcomes in one view.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div>
+      <h3>SAT / ACT Strategy</h3>
+      <p>Should your student submit their score? We explain each college's testing policy and give personalized advice.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"/></svg></div>
+      <h3>H-4 Visa Guide</h3>
+      <p>Understand how your visa situation affects in-state tuition, financial aid, and scholarship eligibility at each school.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+      <h3>Junior Year Timeline</h3>
+      <p>A month-by-month action plan from August through May — so you never miss a deadline that matters.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+      <h3>Data Confidence System</h3>
+      <p>Every data point shows its source and confidence level. We never present uncertain information as fact.</p>
+    </div>
+  </div>
+  <div style="text-align:center;padding:0 24px 20px">
+    <div class="home-disclaimer">
+      ⚠️ This tool provides educational guidance only. Tuition, residency rules, and financial aid eligibility must be verified directly with each college and the relevant state authority. This is not legal or immigration advice.
+    </div>
+  </div>
+</div>
+
+<!-- ── PAGE: WIZARD ── -->
+<div id="page-wizard" class="page">
+  <div class="wizard-wrap">
+    <div class="wizard-sidebar">
+      <div style="font-family:'DM Serif Display',serif;font-size:18px;color:var(--matcha);margin-bottom:24px">CollegePath</div>
+      <div class="wiz-step-item" id="ws-1" onclick="goToStep(1)">
+        <div class="wiz-step-num">1</div><span>Area of Study</span>
+      </div>
+      <div class="wiz-step-item" id="ws-2" onclick="goToStep(2)">
+        <div class="wiz-step-num">2</div><span>Academic Profile</span>
+      </div>
+      <div class="wiz-step-item" id="ws-3" onclick="goToStep(3)">
+        <div class="wiz-step-num">3</div><span>Extracurriculars</span>
+      </div>
+      <div class="wiz-step-item" id="ws-4" onclick="goToStep(4)">
+        <div class="wiz-step-num">4</div><span>College Preferences</span>
+      </div>
+      <div class="wiz-step-item" id="ws-5" onclick="goToStep(5)">
+        <div class="wiz-step-num">5</div><span>Budget & Location</span>
+      </div>
+      <div class="wiz-step-item" id="ws-6" onclick="goToStep(6)">
+        <div class="wiz-step-num">6</div><span>Family Context</span>
+      </div>
+    </div>
+    <div class="wizard-body" id="wizard-body">
+      <!-- injected by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- ── PAGE: RESULTS ── -->
+<div id="page-results" class="page">
+  <div class="results-header">
+    <div style="flex:1">
+      <h2 id="results-title">Your College Shortlist</h2>
+      <div class="results-subhead" id="results-subhead">Based on your profile</div>
+    </div>
+    <div class="results-filters" id="results-filters"></div>
+  </div>
+  <div class="results-body" id="results-body">
+    <div class="loading-screen"><div class="spinner"></div><p>Building your personalized list…</p></div>
+  </div>
+</div>
+
+<!-- ── PAGE: COMPARE ── -->
+<div id="page-compare" class="page">
+  <div class="compare-header">
+    <h2>Side-by-Side Comparison</h2>
+    <button class="btn-secondary" onclick="showPage('results')">← Back to List</button>
+  </div>
+  <div class="compare-scroll" id="compare-content">
+    <div class="empty-state"><h3>No colleges selected</h3><p>Go to My List and click "Compare" on up to 4 colleges.</p></div>
+  </div>
+</div>
+
+<!-- ── PAGE: TIMELINE ── -->
+<div id="page-timeline" class="page">
+  <div class="timeline-wrap" id="timeline-body">
+    <button class="back-link" onclick="showPage('results')">← Back</button>
+    <h2>Junior Year Action Plan</h2>
+    <p class="timeline-sub">Your month-by-month college prep checklist — from August to May.</p>
+  </div>
+</div>
+
+<!-- ── PAGE: VISA ── -->
+<div id="page-visa" class="page">
+  <div class="visa-wrap" id="visa-body">
+    <button class="back-link" onclick="showPage('results')">← Back</button>
+    <h2>Visa, Residency & Financial Aid</h2>
+    <p style="color:var(--text2);margin-bottom:28px;font-size:15px">Key information for families on H-1B and H-4 visas. Always verify with each college and a qualified immigration attorney.</p>
+  </div>
+</div>
+
+<!-- ── PAGE: SAT/ACT ── -->
+<div id="page-satact" class="page">
+  <div class="satact-wrap" id="satact-body">
+    <button class="back-link" onclick="showPage('results')">← Back</button>
+    <h2>SAT &amp; ACT Strategy Guide</h2>
+    <p style="color:var(--text2);margin-bottom:8px;font-size:15px">Testing policies change often. Always verify on the college's official admissions page.</p>
+  </div>
+</div>
+
+<!-- ── PAGE: SOURCES ── -->
+<div id="page-sources" class="page">
+  <div class="sources-wrap" id="sources-body">
+    <button class="back-link" onclick="showPage('results')">← Back</button>
+    <h2>Source Library</h2>
+    <p style="color:var(--text2);margin-bottom:28px;font-size:15px">Every data point in CollegePath comes from an official or highly trusted source. Data was last reviewed August 2025.</p>
+  </div>
+</div>
+
+</div><!-- #app -->
+
+<!-- COMPARE BAR -->
+<div id="compare-bar">
+  <div class="compare-preview" id="compare-preview"></div>
+  <button id="compare-go" onclick="showPage('compare');renderCompare()">Compare →</button>
+</div>
+
+<!-- MODAL -->
+<div id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal-box">
+    <div class="modal-header">
+      <div class="modal-header-info" id="modal-header-info"></div>
+      <button class="modal-close" onclick="document.getElementById('modal-overlay').classList.remove('open')">✕</button>
+    </div>
+    <div class="modal-tabs" id="modal-tabs"></div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
